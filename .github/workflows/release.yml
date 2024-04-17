@@ -24,7 +24,7 @@ jobs:
       - name: Set up Cosign
         uses: sigstore/cosign-installer@v3
       - name: Install Carvel Tools
-        uses: carvel-dev/setup-action@v2
+        uses: carvel-dev/setup-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           only: ytt, kapp, kbld, imgpkg, kctrl, vendir
