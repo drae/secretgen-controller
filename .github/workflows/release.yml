@@ -44,7 +44,7 @@ jobs:
         run: |
           set -e -x
           minikube start --driver=docker --wait=all
-          docker buildx create minikube --use --driver=kubernetes --bootstrap
+          docker buildx create --name minikube --use --driver=kubernetes --bootstrap
           ./hack/build-and-publish-release.sh
           mkdir release
           cp ./tmp/release.yml release/
