@@ -36,7 +36,7 @@ jobs:
     - name: Create Kind Cluster(k8s version ${{ env.k8s_version }})
       run: |
         k8s_version=${{ env.k8s_version }}
-        kind create cluster --image kindest/node:${k8s_version}
+        kind create cluster --image kindest/node:${k8s_version} -n kinder
     - name: Verify kind and k8s version
       run: |
         kind version
@@ -70,6 +70,7 @@ jobs:
         cat kbldmeta.out | tail -n 1 | sed 's/.*final: secretgen-controller -> \(.*\)$/\1/p'  | tail -n 1 | xargs kind load docker-image --name kinder
         kapp deploy -a sg -f kbld.out -c -y
 
+        mkdir tmp
         export SECRETGEN_E2E_NAMESPACE=secretgen-test
 
         ./hack/test-all.sh
