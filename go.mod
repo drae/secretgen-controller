@@ -9,7 +9,7 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/tools v0.8.0 // indirect
-	k8s.io/api v0.26.2
+	k8s.io/api v0.26.15
 	k8s.io/apimachinery v0.27.1
 	k8s.io/client-go v0.26.2
 	k8s.io/code-generator v0.27.1
@@ -34,7 +34,7 @@ require (
 	github.com/gobuffalo/flect v0.3.0 // indirect
 	github.com/gogo/protobuf v1.3.2 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
-	github.com/golang/protobuf v1.5.3 // indirect
+	github.com/golang/protobuf v1.5.4 // indirect
 	github.com/google/gnostic v0.6.9 // indirect
 	github.com/google/go-cmp v0.5.9 // indirect
 	github.com/google/gofuzz v1.2.0 // indirect
