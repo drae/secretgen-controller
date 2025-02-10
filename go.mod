@@ -9,12 +9,12 @@ require (
 	github.com/go-logr/logr v1.2.4
 	github.com/stretchr/testify v1.8.4
 	golang.org/x/tools v0.8.0 // indirect
-	k8s.io/api v0.26.2
+	k8s.io/api v0.26.10
 	k8s.io/apimachinery v0.27.1
-	k8s.io/client-go v0.26.2
+	k8s.io/client-go v0.26.10
 	k8s.io/code-generator v0.27.1
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491
-	sigs.k8s.io/controller-runtime v0.14.6
+	sigs.k8s.io/controller-runtime v0.14.7
 	sigs.k8s.io/controller-tools v0.11.3
 )
 
@@ -75,8 +75,8 @@ require (
 	gopkg.in/inf.v0 v0.9.1 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
-	k8s.io/apiextensions-apiserver v0.26.1 // indirect
-	k8s.io/component-base v0.26.1 // indirect
+	k8s.io/apiextensions-apiserver v0.26.10 // indirect
+	k8s.io/component-base v0.26.10 // indirect
 	k8s.io/gengo v0.0.0-20220902162205-c0856e24416d // indirect
 	k8s.io/klog/v2 v2.90.1 // indirect
 	k8s.io/kube-openapi v0.0.0-20230308215209-15aac26d736a // indirect
