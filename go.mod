@@ -11,7 +11,7 @@ require (
 	golang.org/x/tools v0.29.0 // indirect
 	k8s.io/api v0.26.15
 	k8s.io/apimachinery v0.27.16
-	k8s.io/client-go v0.26.10
+	k8s.io/client-go v0.26.15
 	k8s.io/code-generator v0.27.1
 	k8s.io/utils v0.0.0-20230209194617-a36077c30491
 	sigs.k8s.io/controller-runtime v0.14.7
@@ -64,7 +64,7 @@ require (
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/mod v0.23.0 // indirect
 	golang.org/x/net v0.34.0 // indirect
-	golang.org/x/oauth2 v0.0.0-20220808172628-8227340efae7 // indirect
+	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
 	golang.org/x/term v0.29.0 // indirect
