@@ -3,12 +3,12 @@ module carvel.dev/secretgen-controller
 go 1.23.6
 
 require (
-	github.com/cloudfoundry/bosh-utils v0.0.528 // indirect
-	github.com/cloudfoundry/config-server v0.1.233
+	github.com/cloudfoundry/bosh-utils v0.0.530 // indirect
+	github.com/cloudfoundry/config-server v0.1.234
 	github.com/ghodss/yaml v1.0.0
 	github.com/go-logr/logr v1.4.2
 	github.com/stretchr/testify v1.10.0
-	golang.org/x/tools v0.29.0 // indirect
+	golang.org/x/tools v0.30.0 // indirect
 	k8s.io/api v0.26.15
 	k8s.io/apimachinery v0.27.16
 	k8s.io/client-go v0.26.15
@@ -63,7 +63,7 @@ require (
 	go.uber.org/zap v1.24.0 // indirect
 	golang.org/x/crypto v0.33.0 // indirect
 	golang.org/x/mod v0.23.0 // indirect
-	golang.org/x/net v0.34.0 // indirect
+	golang.org/x/net v0.35.0 // indirect
 	golang.org/x/oauth2 v0.7.0 // indirect
 	golang.org/x/sync v0.11.0 // indirect
 	golang.org/x/sys v0.30.0 // indirect
