@@ -4,10 +4,10 @@ github.com/beorn7/perks/quantile
 # github.com/cespare/xxhash/v2 v2.1.2
 ## explicit; go 1.11
 github.com/cespare/xxhash/v2
-# github.com/cloudfoundry/bosh-utils v0.0.531
+# github.com/cloudfoundry/bosh-utils v0.0.532
 ## explicit; go 1.23.0
 github.com/cloudfoundry/bosh-utils/errors
-# github.com/cloudfoundry/config-server v0.1.235
+# github.com/cloudfoundry/config-server v0.1.236
 ## explicit; go 1.23.0
 github.com/cloudfoundry/config-server/types
 # github.com/davecgh/go-spew v1.1.1
@@ -172,7 +172,7 @@ go.uber.org/zap/internal/bufferpool
 go.uber.org/zap/internal/color
 go.uber.org/zap/internal/exit
 go.uber.org/zap/zapcore
-# golang.org/x/crypto v0.34.0
+# golang.org/x/crypto v0.35.0
 ## explicit; go 1.23.0
 golang.org/x/crypto/blowfish
 golang.org/x/crypto/chacha20
