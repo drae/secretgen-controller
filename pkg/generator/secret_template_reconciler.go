@@ -7,6 +7,7 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
+	"strings"
 	"time"
 
 	sgv1alpha1 "carvel.dev/secretgen-controller/pkg/apis/secretgen/v1alpha1"
@@ -283,7 +284,7 @@ func evaluateTemplate(template *sg2v1alpha1.JSONPathTemplate, values map[string]
 	}
 
 	// Template Secret StringData
-	stringData, err := evaluate(template.StringData, values)
+	stringData, err := evaluateStringData(template.StringData, values)
 	if err != nil {
 		return corev1.Secret{}, fmt.Errorf("templating stringData: %w", err)
 	}
@@ -348,4 +349,58 @@ func evaluateBytes(mapping map[string]string, values map[string]interface{}) (ma
 	}
 
 	return evaluatedMapping, nil
+}
+
+// New function to handle StringData fields with proper base64 decoding
+func evaluateStringData(mapping map[string]string, values map[string]interface{}) (map[string]string, error) {
+	evaluatedMapping := map[string]string{}
+	for key, expression := range mapping {
+		valueBuffer, err := JSONPath(expression).EvaluateWith(values)
+		if err != nil {
+			return nil, err
+		}
+
+		strValue := valueBuffer.String()
+
+		// If this is likely base64 encoded (from a Secret.data field), try to decode it
+		if isLikelyBase64(strValue) && expressionAccessesSecretData(expression) {
+			decoded, err := base64.StdEncoding.DecodeString(strValue)
+			if err == nil {
+				evaluatedMapping[key] = string(decoded)
+				continue
+			}
+			// If decoding failed, fall through to using the original value
+		}
+
+		// Default behavior - use value as-is
+		evaluatedMapping[key] = strValue
+	}
+	return evaluatedMapping, nil
+}
+
+// Helper function to check if a string is likely base64 encoded
+func isLikelyBase64(s string) bool {
+	// Base64 strings have length that's a multiple of 4, allowing for padding
+	if len(s) == 0 || len(s)%4 != 0 {
+		return false
+	}
+
+	// Check for valid base64 characters only
+	for _, c := range s {
+		if !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
+			(c >= '0' && c <= '9') || c == '+' || c == '/' || c == '=') {
+			return false
+		}
+	}
+
+	return true
+}
+
+// Check if the expression is likely accessing a Secret's data field
+func expressionAccessesSecretData(expression string) bool {
+	// More specific pattern matching for Secret data fields
+	return strings.Contains(expression, ".secret") && strings.Contains(expression, ".data.") ||
+		strings.Contains(expression, "Secret") && strings.Contains(expression, ".data.") ||
+		strings.Contains(expression, "[\"data\"]") && strings.Contains(expression, "Secret") ||
+		strings.Contains(expression, "['data']") && strings.Contains(expression, "Secret")
 }
