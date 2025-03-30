@@ -44,7 +44,8 @@ jobs:
         run: |
           set -e -x
           minikube start --driver=docker --wait=all
-          docker buildx create minikube --use --driver=kubernetes --bootstrap
+          # Fix: Create a buildx builder that uses the minikube context properly
+          docker buildx create --name minikube-builder --driver kubernetes --use --bootstrap
           ./hack/build-and-publish-release.sh
           mkdir release
           cp ./tmp/release.yml release/
