@@ -3,7 +3,7 @@ name: release
 on:
   push:
     tags:
-      - 'v*'
+      - "v*"
 
 jobs:
   draft-release:
@@ -20,11 +20,11 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
-          go-version: 1.23.3
+          go-version: 1.21.3
       - name: Set up Cosign
         uses: sigstore/cosign-installer@v3
       - name: Install Carvel Tools
-        uses: carvel-dev/setup-action@v2
+        uses: carvel-dev/setup-action@v1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           only: ytt, kapp, kbld, imgpkg, kctrl, vendir
@@ -32,7 +32,7 @@ jobs:
           kapp: v0.58.0
           kbld: v0.37.5
           imgpkg: v0.37.3
-          kctrl: v0.50.2
+          kctrl: v0.46.2
           vendir: v0.34.4
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
@@ -44,7 +44,7 @@ jobs:
         run: |
           set -e -x
           minikube start --driver=docker --wait=all
-          docker buildx create --name minikube --use --driver=kubernetes --bootstrap
+          docker buildx create minikube --use --driver=kubernetes --bootstrap
           ./hack/build-and-publish-release.sh
           mkdir release
           cp ./tmp/release.yml release/
@@ -69,7 +69,7 @@ jobs:
         run: |
           image_url=`yq e '.spec.template.spec.fetch[0].imgpkgBundle.image' release/package.yml`
           cosign sign --yes "$image_url"
-      
+
       - name: Verify signature on secretgen-controller-package-bundle OCI image
         run: |
           image_url=`yq e '.spec.template.spec.fetch[0].imgpkgBundle.image' release/package.yml`
@@ -86,7 +86,7 @@ jobs:
           RELEASE_NOTES="
           <details>
           <summary><h2>Installation and signature verification</h2></summary>
-          
+
           ## Verify checksums file signature
 
           Install cosign on your system https://docs.sigstore.dev/system_config/installation/
@@ -111,12 +111,12 @@ jobs:
 
           secretgen-controller can be installed by using kapp 
           \`\`\`shell
-          kapp deploy -a sg -f https://github.com/carvel-dev/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
+          kapp deploy -a kc -f https://github.com/drae/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
           \`\`\`
 
           or by using kubectl
           \`\`\`shell
-          kubectl deploy -f https://github.com/carvel-dev/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
+          kubectl deploy -f https://github.com/drae/secretgen-controller/releases/$RELEASE_TAG/download/release.yml
           \`\`\`
 
           ### Container Images
@@ -144,7 +144,7 @@ jobs:
           --certificate-oidc-issuer=https://token.actions.githubusercontent.com \
           -o text
           \`\`\`
-          
+
           </summary>
           </details>
           "
@@ -157,10 +157,10 @@ jobs:
           popd
           cat ./tmp/checksums.txt | tee -a ./tmp/release_notes.txt
           cp ./tmp/checksums.txt release/checksums.txt
-        
+
       - name: Sign checksums.txt
         run: |
-            cosign sign-blob --yes ./tmp/checksums.txt --output-certificate release/checksums.txt.pem  --output-signature release/checksums.txt.sig
+          cosign sign-blob --yes ./tmp/checksums.txt --output-certificate release/checksums.txt.pem  --output-signature release/checksums.txt.sig
       - name: Verify checksums signature
         run: |
           cosign verify-blob \
@@ -239,7 +239,7 @@ jobs:
             return `${checksums['release.yml']}  ./release.yml
             ${checksums['package.yml']}  ./package.yml
             ${checksums['package-metadata.yml']}  ./package-metadata.yml`
-      
+
       - name: Verify uploaded artifacts
         if: startsWith(github.ref, 'refs/tags/')
         env:
@@ -258,19 +258,19 @@ jobs:
 
           # deploy admin sa for secretgen-controller - enough permissions for SGC to be deployed properly
           kapp deploy -a rbac -f https://raw.githubusercontent.com/carvel-dev/kapp-controller/develop/examples/rbac/cluster-admin.yml -y
-          
+
           # Kapp-controller is needed for our PackageInstall
           kapp deploy -a kc -f https://github.com/carvel-dev/kapp-controller/releases/latest/download/release.yml -y
-          
+
           constraintVersion="${{ github.ref_name }}"
-        
+
           kubectl create ns sg
 
           kapp deploy -a sg -f carvel-artifacts/packages/secretgen-controller.carvel.dev/package.yml -f carvel-artifacts/packages/secretgen-controller.carvel.dev/package-metadata.yml -n sg -y
-          
+
           # installing pkg with kctrl
           kctrl pkg install -p secretgen-controller.carvel.dev -i scg --version ${constraintVersion:1} -n sg
-          
+
           export SECRETGEN_E2E_NAMESPACE=secretgen-test
-          
+
           ./hack/test-e2e.sh

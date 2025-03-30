@@ -4,25 +4,25 @@ metadata:
   name: secretgen-controller.carvel.dev
 spec:
   release:
-  - resource: {}
+    - resource: {}
   template:
     spec:
       app:
         spec:
           deploy:
-          - kapp: {}
+            - kapp: {}
           template:
-          - ytt:
-              paths:
-              - config/package-bundle/config
-          - kbld:
-              paths:
-              - '-'
-              - .imgpkg/images.yml
+            - ytt:
+                paths:
+                  - config/package-bundle/config
+            - kbld:
+                paths:
+                  - "-"
+                  - .imgpkg/images.yml
       export:
-      - imgpkgBundle:
-          image: ghcr.io/carvel-dev/secretgen-controller-package-bundle
-          useKbldImagesLock: false
-        includePaths:
-        - config/package-bundle/config
-        - .imgpkg/images.yml
+        - imgpkgBundle:
+            image: ghcr.io/drae/secretgen-controller-package-bundle
+            useKbldImagesLock: false
+          includePaths:
+            - config/package-bundle/config
+            - .imgpkg/images.yml
