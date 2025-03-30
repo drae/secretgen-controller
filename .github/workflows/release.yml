@@ -33,7 +33,7 @@ jobs:
           kbld: v0.37.5
           imgpkg: v0.37.3
           kctrl: v0.46.2
-          vendir: v0.34.4
+          vendir: v0.43.1
       - name: Login to GitHub Container Registry
         uses: docker/login-action@v2
         with:
