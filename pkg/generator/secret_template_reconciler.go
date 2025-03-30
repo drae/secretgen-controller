@@ -359,48 +359,41 @@ func evaluateStringData(mapping map[string]string, values map[string]interface{}
 		if err != nil {
 			return nil, err
 		}
-
-		strValue := valueBuffer.String()
-
-		// If this is likely base64 encoded (from a Secret.data field), try to decode it
-		if isLikelyBase64(strValue) && expressionAccessesSecretData(expression) {
-			decoded, err := base64.StdEncoding.DecodeString(strValue)
+		
+		// Keep track of the expression path during evaluation
+		path, _, isFromSecret := tracePath(expression, values)
+		
+		// If we can determine this came from a Secret's .data field, decode it
+		if isFromSecret && path != "" && strings.Contains(path, ".data.") {
+			decoded, err := base64.StdEncoding.DecodeString(valueBuffer.String())
 			if err == nil {
 				evaluatedMapping[key] = string(decoded)
 				continue
 			}
-			// If decoding failed, fall through to using the original value
 		}
-
-		// Default behavior - use value as-is
-		evaluatedMapping[key] = strValue
+		
+		// Default handling
+		evaluatedMapping[key] = valueBuffer.String()
 	}
-	return evaluatedMapping, nil
+    return evaluatedMapping, nil
 }
 
-// Helper function to check if a string is likely base64 encoded
-func isLikelyBase64(s string) bool {
-	// Base64 strings have length that's a multiple of 4, allowing for padding
-	if len(s) == 0 || len(s)%4 != 0 {
-		return false
-	}
-
-	// Check for valid base64 characters only
-	for _, c := range s {
-		if !((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z') ||
-			(c >= '0' && c <= '9') || c == '+' || c == '/' || c == '=') {
-			return false
-		}
-	}
-
-	return true
-}
-
-// Check if the expression is likely accessing a Secret's data field
-func expressionAccessesSecretData(expression string) bool {
-	// More specific pattern matching for Secret data fields
-	return strings.Contains(expression, ".secret") && strings.Contains(expression, ".data.") ||
-		strings.Contains(expression, "Secret") && strings.Contains(expression, ".data.") ||
-		strings.Contains(expression, "[\"data\"]") && strings.Contains(expression, "Secret") ||
-		strings.Contains(expression, "['data']") && strings.Contains(expression, "Secret")
+// Helper to track the resolution path of a JSONPath expression
+func tracePath(expression string, values map[string]interface{}) (string, interface{}, bool) {
+    // This would be implemented as part of the JSONPath evaluator
+    // to keep track of where the value came from
+    // Simplified placeholder implementation:
+    
+    // Check if this is accessing a Secret directly
+    for resourceName, resource := range values {
+        if resourceMap, ok := resource.(map[string]interface{}); ok {
+            if kind, found := resourceMap["kind"]; found && kind.(string) == "Secret" {
+                if strings.Contains(expression, "."+resourceName+".data.") {
+                    return resourceName + ".data", nil, true
+                }
+            }
+        }
+    }
+    
+    return "", nil, false
 }
