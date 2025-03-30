@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM golang:1.23.3 AS deps
+FROM --platform=$BUILDPLATFORM mirror.gcr.io/library/golang:1.23.3 AS deps
 
 ARG TARGETOS TARGETARCH SGCTRL_VER=development
 WORKDIR /workspace
